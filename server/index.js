@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const userRoute = require("./Routes/userRoute.js");
 const app = express();
 
 //DB CONNECTION CODE
@@ -17,8 +17,10 @@ mongoose
   });
 
 //middlewares
-app.use(express.urlencoded);
-app.use(express.json);
+app.use(express.urlencoded());
+app.use(express.json());
+//route
+app.use("/api/users", userRoute);
 
 //Server code
 const PORT = 5003;
