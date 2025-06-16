@@ -16,6 +16,11 @@ mongoose
     console.log("ERROR IN DB CONNECTION");
   });
 
+//middlewares
+app.use(express.urlencoded);
+app.use(express.json);
+
+//Server code
 const PORT = 5003;
 app.listen(PORT, () => {
   console.log(`SERVER STARTED on ${PORT}`);
