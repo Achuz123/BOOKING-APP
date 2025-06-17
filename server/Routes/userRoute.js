@@ -25,9 +25,10 @@ router.post("/register", async (req, res) => {
     hashedpassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedpassword;
 
-    console.log(salt);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const newUser = await User(req.body);
     await newUser.save(); //saving the info in DB
+
     //sending message if sucessfull
     res.send({
       success: true,
@@ -36,4 +37,34 @@ router.post("/register", async (req, res) => {
   } catch (error) {}
 });
 
+router.post("/login", async (req, res) => {
+  try {
+    // To check if the user exists
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.send({
+        success: false,
+        message: "you are not registered",
+      });
+    }
+
+    //Compare Password
+
+    const validatepass = await bcrypt.compare(req.body.password, user.password); // first plain text then second has password
+
+    //sending messages based on true and false
+
+    if (validatepass) {
+      res.send({
+        success: true,
+        message: "User Logged In",
+      });
+    } else {
+      res.send({
+        success: false,
+        message: "Wrong Password",
+      });
+    }
+  } catch (error) {}
+});
 module.exports = router;
