@@ -8,11 +8,12 @@ const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
   //To handle if user is aldready registered
+  console.log("🔴 Received register request:", req.body);
 
   try {
     const userExist = await User.findOne({ email: req.body.email }); //checking in email for one matchin value of the email from the body
     if (userExist) {
-      res.send({
+      return res.send({
         success: false,
         message: "User aldready exist",
       });
@@ -22,7 +23,7 @@ router.post("/register", async (req, res) => {
 
     // encryting the password
     const salt = await bcrypt.genSalt(10); //10 is the number of rounds
-    hashedpassword = await bcrypt.hash(req.body.password, salt);
+    const hashedpassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedpassword;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
