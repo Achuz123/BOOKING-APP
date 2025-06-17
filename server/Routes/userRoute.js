@@ -8,8 +8,6 @@ const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
   //To handle if user is aldready registered
-  console.log("🔴 Received register request:", req.body);
-
   try {
     const userExist = await User.findOne({ email: req.body.email }); //checking in email for one matchin value of the email from the body
     if (userExist) {

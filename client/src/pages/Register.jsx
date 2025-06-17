@@ -7,7 +7,6 @@ function Register() {
   //FUCTION THE RECIVES THE VALUES FROM THE FORM AND SEND IT TO THE BACKEND USING THE AXIOS INSTANCE
   const submitForm = async (value) => {
     try {
-      console.log("Sending data to backend...", value);
       const res = await RegisterUser(value);
       //this is calling the fuction we created in users.jsx and is posting the values to that url and then the returned response is being stored
       console.log(res);

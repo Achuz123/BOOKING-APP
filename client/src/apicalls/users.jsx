@@ -1,22 +1,4 @@
 import { axiosInstance } from "./index.jsx";
-
-export const RegisterUser = async (value) => {
-  try {
-    const response = await axiosInstance.post("/api/users/register", value);
-    return response.data;
-  } catch (error) {
-    console.log(
-      "Error in RegisterUser:",
-      error.response?.data || error.message
-    );
-    return {
-      success: false,
-      message: error.response?.data?.message || "Something went wrong",
-    };
-  }
-};
-
-/*import { axiosInstance } from "./index.jsx";
 //This bascially does what the postman does to post and get data
 
 export const RegisterUser = async (value) => {
@@ -33,4 +15,3 @@ export const RegisterUser = async (value) => {
 };
 
 // now this funtion will be called in the register page
- */
