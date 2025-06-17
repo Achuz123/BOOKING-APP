@@ -7,11 +7,13 @@ function login() {
   //CODE TO CHECK THE PASSWRD AND SEND THE VALUES
   const submitForm = async (value) => {
     try {
-      const res = await LoginUser(value);
+      const res = await LoginUser(value); //calling the login user function from the axios ans storing the response
 
+      // to display the response message on screen
       if (res.success) {
         message.success(res.message);
-      }
+        window.location.href = "/"; //Will redirect to homepage when logged in
+      } else message.error(res.message);
     } catch (error) {
       console.log(error);
     }

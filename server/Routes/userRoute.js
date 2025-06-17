@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
     if (userExist) {
       return res.send({
         success: false,
-        message: "User aldready exist",
+        message: "User Exist",
       });
     }
 
@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
     //sending message if sucessfull
     res.send({
       success: true,
-      message: "user registered sucessfully",
+      message: "User Registered Sucessfully",
     });
   } catch (error) {}
 });
@@ -47,7 +47,7 @@ router.post("/login", async (req, res) => {
     if (!user) {
       res.send({
         success: false,
-        message: "you are not registered",
+        message: "Not Registered",
       });
     }
 

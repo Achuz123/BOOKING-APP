@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Checkbox, Button, message } from "antd";
 import { Link } from "react-router-dom";
 import { RegisterUser } from "../apicalls/users.jsx";
 
@@ -9,7 +9,11 @@ function Register() {
     try {
       const res = await RegisterUser(value);
       //this is calling the fuction we created in users.jsx and is posting the values to that url and then the returned response is being stored
-      console.log(res);
+
+      // to display the response message on screen
+      if (res.success) {
+        message.success(res.message);
+      } else message.error(res.message);
     } catch (error) {
       console.log(error);
     }
