@@ -1,8 +1,23 @@
 import React from "react";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Checkbox, Button, message } from "antd";
 import { Link } from "react-router-dom";
+import { LoginUser } from "../apicalls/users.jsx";
 
 function login() {
+  //CODE TO CHECK THE PASSWRD AND SEND THE VALUES
+  const submitForm = async (value) => {
+    try {
+      const res = await LoginUser(value);
+
+      if (res.success) {
+        message.success(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //HTML CODE FOR THE PAGE
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen ">
@@ -16,13 +31,12 @@ function login() {
             style={{ width: "100%" }}
             initialValues={{ remember: true }}
             autoComplete="off"
+            onFinish={submitForm}
           >
             <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                { required: true, message: "Please input your username!" },
-              ]}
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: "Please input your Email!" }]}
             >
               <div className="hover:ring-2 hover:ring-blue-300 focus-within:ring-2 focus-within:ring-blue-500 rounded transition duration-200">
                 <Input className="!bg-blue-50 !border-none !shadow-none !text-black" />

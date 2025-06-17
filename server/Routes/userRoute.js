@@ -24,9 +24,9 @@ router.post("/register", async (req, res) => {
     const hashedpassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedpassword;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //saving the info in DB
     const newUser = await User(req.body);
-    await newUser.save(); //saving the info in DB
+    await newUser.save();
 
     //sending message if sucessfull
     res.send({
@@ -35,10 +35,14 @@ router.post("/register", async (req, res) => {
     });
   } catch (error) {}
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//route for login
 
 router.post("/login", async (req, res) => {
   try {
     // To check if the user exists
+    console.log(req);
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       res.send({

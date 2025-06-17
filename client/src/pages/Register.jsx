@@ -32,7 +32,7 @@ function Register() {
           autoComplete="off"
         >
           <Form.Item
-            label="name"
+            label="Name"
             name="name"
             rules={[{ required: true, message: "Please input your Name!" }]}
           >
@@ -41,7 +41,7 @@ function Register() {
             </div>
           </Form.Item>
           <Form.Item
-            label="email"
+            label="Email"
             name="email"
             rules={[{ required: true, message: "Please input your email!" }]}
           >
@@ -51,7 +51,7 @@ function Register() {
           </Form.Item>
 
           <Form.Item
-            label="password"
+            label="Password"
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
