@@ -7,12 +7,18 @@ function login() {
   //CODE TO CHECK THE PASSWRD AND SEND THE VALUES
   const submitForm = async (value) => {
     try {
-      const res = await LoginUser(value); //calling the login user function from the axios ans storing the response
+      //calling the login user function from the axios ans storing the response
+      const res = await LoginUser(value);
+
+      //with the response we alo get the JWT token we will save that in local storage
+
+      localStorage.setItem("token", res.token);
 
       // to display the response message on screen
       if (res.success) {
         message.success(res.message);
-        window.location.href = "/"; //Will redirect to homepage when logged in
+        //Will redirect to homepage when logged in
+        window.location.href = "/";
       } else message.error(res.message);
     } catch (error) {
       console.log(error);

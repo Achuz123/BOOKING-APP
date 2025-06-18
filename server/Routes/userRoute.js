@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../Models/userModel.js");
 const send = require("send");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 //ROUTE FOR REGISTER
 
@@ -42,7 +43,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     // To check if the user exists
-    console.log(req);
+
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       res.send({
@@ -58,9 +59,17 @@ router.post("/login", async (req, res) => {
     //sending messages based on true and false
 
     if (validatepass) {
+      //ASSIGNNING THE JWT TOKEN
+      // you pass the userid that mongodb generates then the unique signature then the expiration
+
+      const token = jwt.sign({ useId: user._id }, `${process.env.SECRET_KEY}`, {
+        expiresIn: "1d",
+      });
+
       res.send({
         success: true,
         message: "User Logged In",
+        token: token,
       });
     } else {
       res.send({
