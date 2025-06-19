@@ -4,6 +4,7 @@ const User = require("../Models/userModel.js");
 const send = require("send");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middleware/authMiddleware.js");
 
 //ROUTE FOR REGISTER
 
@@ -62,9 +63,13 @@ router.post("/login", async (req, res) => {
       //ASSIGNNING THE JWT TOKEN
       // you give  the userid that mongodb generates then the unique signature then the expiration
 
-      const token = jwt.sign({ useId: user._id }, `${process.env.SECRET_KEY}`, {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign(
+        { userId: user._id },
+        `${process.env.SECRET_KEY}`,
+        {
+          expiresIn: "1d",
+        }
+      );
 
       res.send({
         success: true,
@@ -79,5 +84,20 @@ router.post("/login", async (req, res) => {
       });
     }
   } catch (error) {}
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//middleware
+
+router.get("/get-current-user", authMiddleware, async (req, res) => {
+  console.log(req);
+  const user = await User.findById(req.userId).select("-password"); //seclect is used to sslect only the necessary -means evrything except that
+  console.log(user);
+
+  res.send({
+    success: true,
+    message: "USER AUThORIZED FOR PROtrcted route",
+    data: user,
+  });
 });
 module.exports = router;

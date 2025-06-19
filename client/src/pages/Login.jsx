@@ -22,7 +22,8 @@ function login() {
       // to display the response message on screen
       if (res.success) {
         message.success(res.message);
-        //Will redirect to homepage when logged // window.location.href = "/";
+        //Will redirect to homepage when logged
+        window.location.href = "/";
       } else message.error(res.message);
     } catch (error) {
       console.log(error);
