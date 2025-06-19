@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
 
     if (validatepass) {
       //ASSIGNNING THE JWT TOKEN
-      // you pass the userid that mongodb generates then the unique signature then the expiration
+      // you give  the userid that mongodb generates then the unique signature then the expiration
 
       const token = jwt.sign({ useId: user._id }, `${process.env.SECRET_KEY}`, {
         expiresIn: "1d",
@@ -68,6 +68,7 @@ router.post("/login", async (req, res) => {
 
       res.send({
         success: true,
+        user: user,
         message: "User Logged In",
         token: token,
       });

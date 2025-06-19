@@ -6,7 +6,7 @@ const loaderSlice = createSlice({
   name: "loader",
 
   initialState: {
-    loading: true,
+    loading: false,
   },
   //showLoading is basically a function is bascially a fuction that sets the state to truw or false
   reducers: {

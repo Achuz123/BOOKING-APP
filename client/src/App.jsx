@@ -12,7 +12,9 @@ function App() {
   //loading now contains thae actual boolean value of loader
 
   const { loading } = useSelector((state) => state.loader);
+  const { user } = useSelector((state) => state.user);
   console.log(loading);
+  console.log(user);
   return (
     <>
       {/* If loading is true, show the loading message; otherwise show nothing*/}

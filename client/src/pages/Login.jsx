@@ -2,8 +2,11 @@ import React from "react";
 import { Form, Input, Checkbox, Button, message } from "antd";
 import { Link } from "react-router-dom";
 import { LoginUser } from "../apicalls/users.jsx";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice.jsx";
 
 function login() {
+  const dispatch = useDispatch();
   //CODE TO CHECK THE PASSWRD AND SEND THE VALUES
   const submitForm = async (value) => {
     try {
@@ -14,11 +17,12 @@ function login() {
 
       localStorage.setItem("token", res.token);
 
+      dispatch(setUser(res.user)); //alling the slice and giving the user infomration as payload
+
       // to display the response message on screen
       if (res.success) {
         message.success(res.message);
-        //Will redirect to homepage when logged in
-        window.location.href = "/";
+        //Will redirect to homepage when logged // window.location.href = "/";
       } else message.error(res.message);
     } catch (error) {
       console.log(error);
