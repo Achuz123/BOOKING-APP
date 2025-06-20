@@ -1,12 +1,14 @@
 import React from "react";
 import { Form, Input, Checkbox, Button, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../apicalls/users.jsx";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice.jsx";
+import { useEffect } from "react";
 
 function login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   //CODE TO CHECK THE PASSWRD AND SEND THE VALUES
   const submitForm = async (value) => {
     try {
@@ -29,6 +31,12 @@ function login() {
       console.log(error);
     }
   };
+
+  //if you have a token then you wont be allowed to go to login page youll go to home directly
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) navigate("/");
+  }, []);
 
   //HTML CODE FOR THE PAGE
   return (

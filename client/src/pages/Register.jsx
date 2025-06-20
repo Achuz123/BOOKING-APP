@@ -1,9 +1,11 @@
 import React from "react";
 import { Form, Input, Checkbox, Button, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RegisterUser } from "../apicalls/users.jsx";
+import { useEffect } from "react";
 
 function Register() {
+  const navigate = useNavigate();
   //FUCTION THE RECIVES THE VALUES FROM THE FORM AND SEND IT TO THE BACKEND USING THE AXIOS INSTANCE
   const submitForm = async (value) => {
     try {
@@ -18,6 +20,10 @@ function Register() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) navigate("/");
+  }, []);
 
   return (
     //HTML FOR THE PAGE
