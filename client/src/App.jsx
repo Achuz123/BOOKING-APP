@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 import { useSelector } from "react-redux";
 import Loader from "./components/loaderanimation.jsx";
 import ProtectedRoute from "./components/protectedRoute.jsx";
+import Profile from "./pages/Profile/index.jsx";
+import Admin from "./pages/Admin/index.jsx";
 
 function App() {
   // Accessing the 'loading' value from the 'loader' slice of the Redux store
@@ -36,6 +38,22 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

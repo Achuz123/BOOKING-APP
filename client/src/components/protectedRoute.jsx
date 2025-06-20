@@ -4,7 +4,7 @@ import { hideLoading, showLoading } from "../redux/loaderSlice";
 import { getCurrentUser } from "../apicalls/users";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
-import { Layout, Menu, Dropdown } from "antd";
+import { Layout, Menu, Dropdown, message } from "antd";
 import { Header } from "antd/es/layout/layout";
 import {
   HomeOutlined,
@@ -47,11 +47,16 @@ function ProtectedRoute({ children }) {
     try {
       dispatch(showLoading());
       const response = await getCurrentUser();
-      dispatch(setUser(response.data));
-      dispatch(hideLoading());
-      if (!response.success) {
+
+      if (response.success) dispatch(setUser(response.data));
+      else {
+        dispatch(setUser(null));
+        message.error(response.message);
+        localStorage.removeItem("token");
         navigate("/login");
       }
+
+      dispatch(hideLoading());
     } catch (error) {
       dispatch(hideLoading());
       navigate("/login");
@@ -59,11 +64,40 @@ function ProtectedRoute({ children }) {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      getValidUser();
-    } else {
-      navigate("/login");
-    }
+    const validateUser = async () => {
+      if (localStorage.getItem("token")) {
+        try {
+          dispatch(showLoading());
+          const response = await getCurrentUser();
+          dispatch(setUser(response.data));
+          dispatch(hideLoading());
+
+          if (!response.success) {
+            navigate("/login");
+          } else {
+            const isAdmin = response.data.isAdmin;
+            const currentPath = window.location.pathname;
+
+            // Block admin from accessing /profile
+            if (isAdmin && currentPath === "/profile") {
+              navigate("/admin");
+            }
+
+            // Block non-admin from accessing /admin
+            if (!isAdmin && currentPath === "/admin") {
+              navigate("/profile");
+            }
+          }
+        } catch (error) {
+          dispatch(hideLoading());
+          navigate("/login");
+        }
+      } else {
+        navigate("/login");
+      }
+    };
+
+    validateUser();
   }, []);
 
   return (
