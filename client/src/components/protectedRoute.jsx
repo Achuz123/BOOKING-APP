@@ -48,8 +48,13 @@ function ProtectedRoute({ children }) {
       dispatch(showLoading());
       const response = await getCurrentUser();
 
-      if (response.success) dispatch(setUser(response.data));
-      else {
+      if (response.success) {
+        dispatch(setUser(response.data));
+        if (!response.data.isAdmin && window.location.pathname == "/admin") {
+          message.warning("You are not authorized");
+          navigate("/");
+        }
+      } else {
         dispatch(setUser(null));
         message.error(response.message);
         localStorage.removeItem("token");
@@ -64,40 +69,11 @@ function ProtectedRoute({ children }) {
   };
 
   useEffect(() => {
-    const validateUser = async () => {
-      if (localStorage.getItem("token")) {
-        try {
-          dispatch(showLoading());
-          const response = await getCurrentUser();
-          dispatch(setUser(response.data));
-          dispatch(hideLoading());
-
-          if (!response.success) {
-            navigate("/login");
-          } else {
-            const isAdmin = response.data.isAdmin;
-            const currentPath = window.location.pathname;
-
-            // Block admin from accessing /profile
-            if (isAdmin && currentPath === "/profile") {
-              navigate("/admin");
-            }
-
-            // Block non-admin from accessing /admin
-            if (!isAdmin && currentPath === "/admin") {
-              navigate("/profile");
-            }
-          }
-        } catch (error) {
-          dispatch(hideLoading());
-          navigate("/login");
-        }
-      } else {
-        navigate("/login");
-      }
-    };
-
-    validateUser();
+    if (localStorage.getItem("token")) {
+      getValidUser();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   return (

@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const userRoute = require("./Routes/userRoute.js");
+const theatreRoute = require("./Routes/theatreRoute.js");
 const app = express();
 
 //DB CONNECTION CODE
@@ -22,6 +23,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 //route
 app.use("/api/users", userRoute);
+app.use("/api/theatre", theatreRoute);
 
 //Server code
 const PORT = 5003;
