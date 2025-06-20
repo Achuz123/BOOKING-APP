@@ -1,12 +1,43 @@
 import React from "react";
 import { Col, Modal, Row, Form, Input, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { addTheatre } from "../../apicalls/theaters";
+import { useDispatch, useSelector } from "react-redux";
+import { hideLoading, showLoading } from "../../redux/loaderSlice";
+import { useNavigate } from "react-router-dom";
+
 //the model will open and close basced on that boolean value
 function TheatreFormModal({ isModelOpen, setIsModelOpen }) {
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const onSubmitForm = async (payload) => {
+    try {
+      dispatch(showLoading());
+      const response = await addTheatre({ ...payload, owner: user._id });
+      if (response.success) {
+        message.success("Added Sucessfully");
+        dispatch(hideLoading());
+        setIsModelOpen(false);
+      }
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
   return (
     <>
-      <Modal open={isModelOpen}>
-        <Form layout="vertical" style={{ width: "100%" }}>
+      <Modal
+        open={isModelOpen}
+        footer={null}
+        closeIcon={null}
+        title="Add New Theatre"
+      >
+        <Form
+          layout="vertical"
+          style={{ width: "100%" }}
+          onFinish={onSubmitForm}
+        >
           <Row
             gutter={{
               xs: 6,
@@ -103,6 +134,7 @@ function TheatreFormModal({ isModelOpen, setIsModelOpen }) {
               Submit the Data
             </Button>
             <Button
+              block
               className="mt-3"
               onClick={() => {
                 setIsModelOpen(false);

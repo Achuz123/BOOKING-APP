@@ -1,4 +1,4 @@
-import axios from "axios";
+import { axiosInstance } from "./index.jsx";
 
 export const addTheatre = async (value) => {
   try {

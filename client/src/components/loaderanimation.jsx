@@ -21,7 +21,7 @@ const overlayStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  zIndex: 1000,
+  zIndex: 99999,
 };
 
 export default Loader;
