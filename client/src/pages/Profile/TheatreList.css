@@ -1,0 +1,16 @@
+/* More specific selector to target AntD buttons */
+.my-button.ant-btn {
+  padding: 20px 10px;
+  background-color: rgb(22, 119, 255);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hover effect */
+.my-button.ant-btn:hover {
+  background-color: rgb(0, 21, 41) !important;
+  color: rgb(255, 246, 246) !important;
+}
