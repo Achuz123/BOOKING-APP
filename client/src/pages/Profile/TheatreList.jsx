@@ -1,30 +1,135 @@
-import React, { useState } from "react";
-import { Button } from "antd";
-import "./TheatreList.css";
+import React, { useEffect, useState } from "react";
+import { Table, Button, message } from "antd";
 import TheatreFormModal from "./theatreForm";
+import DeleteTheatreModal from "./deleteTheatreModel";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { showLoading, hideLoading } from "../../redux/loaderSlice";
+import { getAllTheatres } from "../../apicalls/theaters";
 
-function TheatreList() {
-  const [isModelOpen, setIsModelOpen] = useState(false);
+const TheatreList = () => {
+  const { user } = useSelector((state) => state.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedTheatre, setSelectedTheatre] = useState(null);
+  const [formType, setFormType] = useState("add");
+  const [theatres, setTheatres] = useState(null);
+  const dispatch = useDispatch();
+
+  const getData = async () => {
+    try {
+      dispatch(showLoading());
+      const response = await getAllTheatres({ owner: user._id });
+      if (response.success) {
+        const allTheatres = response.data;
+        setTheatres(
+          allTheatres.map((item) => ({ ...item, key: `theatre${item._id}` }))
+        );
+      } else {
+        message.error(response.message);
+      }
+      dispatch(hideLoading());
+    } catch (err) {
+      dispatch(hideLoading());
+      message.error(err.message);
+    }
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status, data) =>
+        data.isActive ? "Approved" : "Pending/ Blocked",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text, data) => {
+        return (
+          <div className="d-flex align-items-center gap-10">
+            <Button
+              onClick={() => {
+                setIsModalOpen(true);
+                setFormType("edit");
+                setSelectedTheatre(data);
+              }}
+            >
+              <EditOutlined />
+            </Button>
+            <Button
+              onClick={() => {
+                setIsDeleteModalOpen(true);
+                setSelectedTheatre(data);
+              }}
+            >
+              <DeleteOutlined />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
-      <div className="flex justify-end mx-0.7 ">
+      <div className="d-flex justify-content-end">
         <Button
+          type="primary"
           onClick={() => {
-            setIsModelOpen(true);
+            setIsModalOpen(true);
+            setFormType("add");
           }}
-          className="my-button"
         >
           Add Theatre
         </Button>
-        {isModelOpen && (
-          <TheatreFormModal
-            isModelOpen={isModelOpen}
-            setIsModelOpen={setIsModelOpen}
-          />
-        )}
       </div>
+      <Table dataSource={theatres} columns={columns} />
+      {isModalOpen && (
+        <TheatreFormModal
+          isModalOpen={isModalOpen}
+          selectedTheatre={selectedTheatre}
+          setSelectedTheatre={setSelectedTheatre}
+          setIsModalOpen={setIsModalOpen}
+          formType={formType}
+          getData={getData}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteTheatreModal
+          isDeleteModalOpen={isDeleteModalOpen}
+          selectedTheatre={selectedTheatre}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          setSelectedTheatre={setSelectedTheatre}
+          getData={getData}
+        />
+      )}
     </>
   );
-}
+};
 
 export default TheatreList;

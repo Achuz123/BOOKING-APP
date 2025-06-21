@@ -23,7 +23,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 //route
 app.use("/api/users", userRoute);
-app.use("/api/theatre", theatreRoute);
+app.use("/api/theatres", theatreRoute);
 
 //Server code
 const PORT = 5003;

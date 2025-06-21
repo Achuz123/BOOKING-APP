@@ -3,7 +3,7 @@ import { axiosInstance } from "./index.jsx";
 export const addTheatre = async (value) => {
   try {
     const response = await axiosInstance.post(
-      "/api/theatre/add-theatre",
+      "/api/theatres/add-theatre",
       value
     );
     return response.data;
@@ -15,7 +15,7 @@ export const addTheatre = async (value) => {
 export const updateTheatre = async (value) => {
   try {
     const response = await axiosInstance.put(
-      "/api/theatre/update-theatre",
+      "/api/theatres/update-theatre",
       value
     );
     return response.data;
@@ -26,12 +26,25 @@ export const updateTheatre = async (value) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 export const deleteTheatre = async (value) => {
   try {
-    const response = await axiosInstance.delete(
-      "/api/theatre/delete-theatre",
+    const response = await axiosInstance.put(
+      "/api/theatres/delete-theatre",
       value
     );
     return response.data;
   } catch (error) {
     return error.response;
+  }
+};
+/////////////////////////////////////////////////
+
+export const getAllTheatres = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      "/api/theatres/get-all-theatres-by-owner",
+      payload
+    );
+    return response.data;
+  } catch (err) {
+    return err.response;
   }
 };
