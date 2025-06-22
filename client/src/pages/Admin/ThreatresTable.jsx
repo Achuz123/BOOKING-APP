@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button } from "antd";
+import { Table, Button, message } from "antd";
 
 import { hideLoading, showLoading } from "../../redux/loaderSlice";
-import { getAllTheatresAdmin } from "../../apicalls/theaters";
+import { getAllTheatresAdmin, updateTheatre } from "../../apicalls/theaters";
 import { useDispatch } from "react-redux";
 
 function ThreatresTable() {
@@ -85,7 +85,29 @@ function ThreatresTable() {
       },
     },
   ];
-  ///use effect to call it egverytime the page runs
+
+  //to change when we press submit
+  const handleStatusChange = async (theatre) => {
+    try {
+      dispatch(showLoading);
+      let values = {
+        ...theatres,
+        theatreId: theatre._id,
+        isActive: !theatre.isActive,
+      };
+      const response = await updateTheatre(values);
+      console.log(response, theatre);
+      if (response.success) {
+        message.success(response.message);
+        getData();
+      }
+      dispatch(hideLoading);
+    } catch (err) {
+      dispatch(hideLoading);
+      message.error(err.message);
+    }
+  };
+  ///use effect to call it everytime the page runs
 
   useEffect(() => {
     getData();
