@@ -60,9 +60,10 @@ router.put("/delete-theatre", async (req, res) => {
 //////////////////
 
 /////////////////////////////////////////////////////////
+//get everything with admin
 router.get("/get-all-theatres", async (req, res) => {
   try {
-    const allTheatres = await Theatre.find().populate("owner");
+    const allTheatres = await Theatre.find().populate("owner"); //when you do this, it will return the owner details as well instead of just the owner id
     res.send({
       success: true,
       message: "All theatres fetched!",

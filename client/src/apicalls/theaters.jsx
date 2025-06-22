@@ -48,3 +48,12 @@ export const getAllTheatres = async (payload) => {
     return err.response;
   }
 };
+////////////////////////////////////////////////////////////////
+export const getAllTheatresAdmin = async () => {
+  try {
+    const response = await axiosInstance.get("/api/theatres/get-all-theatres");
+    return response.data;
+  } catch (err) {
+    return err.response;
+  }
+};
