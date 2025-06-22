@@ -9,6 +9,7 @@ import Loader from "./components/loaderanimation.jsx";
 import ProtectedRoute from "./components/protectedRoute.jsx";
 import Profile from "./pages/Profile/index.jsx";
 import Admin from "./pages/Admin/index.jsx";
+import SingleMovie from "./pages/singleMovie.jsx";
 
 function App() {
   // Accessing the 'loading' value from the 'loader' slice of the Redux store
@@ -33,6 +34,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/movie/:id"
+            element={
+              <ProtectedRoute>
+                <SingleMovie />
               </ProtectedRoute>
             }
           />
