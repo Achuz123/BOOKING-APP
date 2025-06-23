@@ -97,18 +97,20 @@ const SingleMovie = () => {
               </p>
 
               <hr />
-              {/* <div className="d-flex flex-column-mob align-items-center mt-3">
-                <label className="me-3 flex-shrink-0">Choose the date:</label>
-                <Input
-                  onChange={handleDate}
-                  type="date"
-                  min={moment().format("YYYY-MM-DD")}
-                  className="max-width-300 mt-8px-mob"
-                  value={date}
-                  placeholder="default size"
-                  prefix={<CalendarOutlined />}
-                />
-              </div> */}
+              {
+                <div className="d-flex flex-column-mob align-items-center mt-3">
+                  <label className="me-3 flex-shrink-0">Choose the date:</label>
+                  <Input
+                    onChange={handleDate}
+                    type="date"
+                    min={moment().format("YYYY-MM-DD")}
+                    className="max-w-[300px] mt-2 sm:mt-0"
+                    value={date}
+                    placeholder="default size"
+                    prefix={<CalendarOutlined />}
+                  />
+                </div>
+              }
             </div>
           </div>
         )}

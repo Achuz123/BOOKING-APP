@@ -13,10 +13,7 @@ const theatreSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  name: {
-    type: String,
-    required: true,
-  },
+
   email: {
     type: String,
     required: true,
@@ -37,4 +34,5 @@ const theatreSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("theatres", theatreSchema);
+module.exports =
+  mongoose.models.theatres || mongoose.model("theatres", theatreSchema);

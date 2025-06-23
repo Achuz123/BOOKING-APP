@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../../redux/loaderSlice";
 import { getAllTheatres } from "../../apicalls/theaters";
+import ShowModal from "./showModel";
 
 const TheatreList = () => {
   const { user } = useSelector((state) => state.user);
@@ -14,6 +15,7 @@ const TheatreList = () => {
   const [selectedTheatre, setSelectedTheatre] = useState(null);
   const [formType, setFormType] = useState("add");
   const [theatres, setTheatres] = useState(null);
+  const [isShowModalOpen, setIsShowModalOpen] = useState(false);
   const dispatch = useDispatch();
 
   const getData = async () => {
@@ -22,8 +24,11 @@ const TheatreList = () => {
       const response = await getAllTheatres({ owner: user._id });
       if (response.success) {
         const allTheatres = response.data;
+        // console.log(allTheatres);
         setTheatres(
-          allTheatres.map((item) => ({ ...item, key: `theatre${item._id}` }))
+          allTheatres.map(function (item) {
+            return { ...item, key: `theatre${item._id}` };
+          })
         );
       } else {
         message.error(response.message);
@@ -59,15 +64,20 @@ const TheatreList = () => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (status, data) =>
-        data.isActive ? "Approved" : "Pending/ Blocked",
+      render: (status, data) => {
+        if (data.isActive) {
+          return `Approved`;
+        } else {
+          return `Pending/ Blocked`;
+        }
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
       render: (text, data) => {
         return (
-          <div className="d-flex align-items-center gap-10">
+          <div className="flex items-center gap-2.5">
             <Button
               onClick={() => {
                 setIsModalOpen(true);
@@ -85,6 +95,16 @@ const TheatreList = () => {
             >
               <DeleteOutlined />
             </Button>
+            {data.isActive && (
+              <Button
+                onClick={() => {
+                  setIsShowModalOpen(true);
+                  setSelectedTheatre(data);
+                }}
+              >
+                + Shows
+              </Button>
+            )}
           </div>
         );
       },
@@ -126,6 +146,14 @@ const TheatreList = () => {
           setIsDeleteModalOpen={setIsDeleteModalOpen}
           setSelectedTheatre={setSelectedTheatre}
           getData={getData}
+        />
+      )}
+
+      {isShowModalOpen && (
+        <ShowModal
+          isShowModalOpen={isShowModalOpen}
+          setIsShowModalOpen={setIsShowModalOpen}
+          selectedTheatre={selectedTheatre}
         />
       )}
     </>
