@@ -25,7 +25,7 @@ import {
   deleteShow,
   getShowsByTheatre,
   updateShow,
-} from "../../apicalls/shows    ";
+} from "../../apicalls/shows";
 import moment from "moment";
 import { hideLoading, showLoading } from "../../redux/loaderSlice";
 
