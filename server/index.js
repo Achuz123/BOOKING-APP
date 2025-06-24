@@ -5,7 +5,7 @@ const userRoute = require("./Routes/userRoute.js");
 const theatreRoute = require("./Routes/theatreRoute.js");
 const movieRoutes = require("./Routes/movieRoutes.js");
 const showRoutes = require("./Routes/showRoutes.js");
-
+bookingRoute = require("./Routes/bookingRoute.js");
 const app = express();
 
 //DB CONNECTION CODE
@@ -29,6 +29,7 @@ app.use("/api/users", userRoute);
 app.use("/api/theatres", theatreRoute);
 app.use("/api/movies", movieRoutes);
 app.use("/api/shows", showRoutes);
+app.use("/api/bookings", bookingRoute);
 
 //Server code
 const PORT = 5003;
