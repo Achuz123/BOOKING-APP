@@ -5,7 +5,7 @@ const userRoute = require("./Routes/userRoute.js");
 const theatreRoute = require("./Routes/theatreRoute.js");
 const movieRoutes = require("./Routes/movieRoutes.js");
 const showRoutes = require("./Routes/showRoutes.js");
-bookingRoute = require("./Routes/bookingRoute.js");
+const bookingRoute = require("./Routes/bookingRoute.js");
 const app = express();
 
 //DB CONNECTION CODE

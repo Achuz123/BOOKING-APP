@@ -1,12 +1,13 @@
-import { axiosInstance } from ".";
+import { axiosInstance } from "./index";
 
-export const makePayment = async (token, amount) => {
+export const makePayment = async (amount) => {
   try {
-    const response = await axiosInstance.post("/api/bookings/make-payment", {
-      token,
-      amount,
-    });
-    // console.log(token, amount, response);
+    const response = await axiosInstance.post(
+      "/api/bookings/create-payment-intent",
+      {
+        amount,
+      }
+    );
     return response.data;
   } catch (err) {
     return err.response;

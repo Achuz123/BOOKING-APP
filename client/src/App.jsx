@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,17 +11,19 @@ import Admin from "./pages/Admin/index.jsx";
 import SingleMovie from "./pages/singleMovie.jsx";
 import BookShow from "./pages/BookShow.jsx";
 
-function App() {
-  // Accessing the 'loading' value from the 'loader' slice of the Redux store
-  //loading now contains thae actual boolean value of loader
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
+// Stripe public key
+const stripePromise = loadStripe(
+  "pk_test_51RdatZPsdpG7HzglqoaOobHtioB0jMfXLm6wtCIR0Sdrn3HnBXcf1omOEU1BNJbSrFWbsdxaVkQhLsPOazexG9UL00MoPcr79N"
+);
+
+function App() {
   const { loading } = useSelector((state) => state.loader);
-  const { user } = useSelector((state) => state.user);
-  //console.log(loading);
-  //console.log(user);
+
   return (
     <>
-      {/* If loading is true, show the loading message; otherwise show nothing*/}
       {loading && (
         <div>
           <Loader />
@@ -38,7 +39,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/movie/:id"
             element={
@@ -69,7 +69,9 @@ function App() {
             path="/book-show/:id"
             element={
               <ProtectedRoute>
-                <BookShow />
+                <Elements stripe={stripePromise}>
+                  <BookShow />
+                </Elements>
               </ProtectedRoute>
             }
           />

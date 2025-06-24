@@ -3,16 +3,79 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideLoading, showLoading } from "../redux/loaderSlice";
 import { getShowById } from "../apicalls/shows";
 import { useNavigate, useParams } from "react-router-dom";
-import { message, Card, Row, Col, Button } from "antd";
+import { message, Card, Row, Col } from "antd";
 import moment from "moment";
-import StripeCheckout from "react-stripe-checkout";
 import { bookShow, makePayment } from "../apicalls/bookings";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_test_51RdatZPsdpG7HzglqoaOobHtioB0jMfXLm6wtCIR0Sdrn3HnBXcf1omOEU1BNJbSrFWbsdxaVkQhLsPOazexG9UL00MoPcr79N"
+);
+
+const CheckoutForm = ({ amount, onSuccess }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    dispatch(showLoading());
+    try {
+      const response = await makePayment(amount);
+
+      if (!response.success) {
+        throw new Error("Failed to create payment intent");
+      }
+
+      const clientSecret = response.clientSecret;
+
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+      if (result.error) {
+        message.error(result.error.message);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          message.success("Payment successful!");
+          onSuccess(result.paymentIntent.id);
+        }
+      }
+    } catch (err) {
+      message.error(err.message);
+    }
+    dispatch(hideLoading());
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-[600px] mx-auto mt-6">
+      <CardElement className="border p-3 rounded mb-4" />
+      <button
+        type="submit"
+        disabled={!stripe}
+        className="bg-blue-600 text-white px-6 py-2 rounded w-full"
+      >
+        Pay Now
+      </button>
+    </form>
+  );
+};
 
 const BookShow = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [show, setShow] = useState();
-  const [selectedSeats, setSelectedSeats] = useState([107]);
+  const [selectedSeats, setSelectedSeats] = useState([]);
   const params = useParams();
   const navigate = useNavigate();
 
@@ -110,28 +173,6 @@ const BookShow = () => {
         navigate("/profile");
       } else {
         message.error(response.message);
-        navigate("/profile");
-      }
-      dispatch(hideLoading());
-    } catch (err) {
-      message.error(err.message);
-      dispatch(hideLoading());
-    }
-  };
-
-  const onToken = async (token) => {
-    try {
-      dispatch(showLoading());
-      const response = await makePayment(
-        token,
-        selectedSeats.length * show.ticketPrice * 100
-      );
-      if (response.success) {
-        message.success(response.message);
-        book(response.data);
-      } else {
-        message.error(response.message);
-        console.log(response.message);
       }
       dispatch(hideLoading());
     } catch (err) {
@@ -183,17 +224,12 @@ const BookShow = () => {
               {getSeats()}
 
               {selectedSeats.length > 0 && (
-                <StripeCheckout
-                  token={onToken}
-                  amount={selectedSeats.length * show.ticketPrice * 100}
-                  stripeKey="pk_test_51RdatZPsdpG7HzglqoaOobHtioB0jMfXLm6wtCIR0Sdrn3HnBXcf1omOEU1BNJbSrFWbsdxaVkQhLsPOazexG9UL00MoPcr79N"
-                >
-                  <div className="max-w-[600px] mx-auto">
-                    <Button type="primary" shape="round" size="large" block>
-                      Pay Now
-                    </Button>
-                  </div>
-                </StripeCheckout>
+                <Elements stripe={stripePromise}>
+                  <CheckoutForm
+                    amount={selectedSeats.length * show.ticketPrice * 100}
+                    onSuccess={book}
+                  />
+                </Elements>
               )}
             </Card>
           </Col>
