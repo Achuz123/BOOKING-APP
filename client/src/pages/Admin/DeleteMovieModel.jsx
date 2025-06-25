@@ -38,21 +38,61 @@ const DeleteMovieModal = ({
   };
 
   return (
-    <>
-      <Modal
-        title="Delete Movie?"
-        open={isDeleteModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+    <Modal
+      title={
+        <span
+          style={{
+            fontSize: "22px",
+            fontWeight: "700",
+            color: "#D62828", // Red accent for delete
+          }}
+        >
+          Delete Movie?
+        </span>
+      }
+      open={isDeleteModalOpen}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      okText="Delete"
+      cancelText="Cancel"
+      okButtonProps={{
+        style: {
+          backgroundColor: "#D62828",
+          borderColor: "#D62828",
+          color: "#fff",
+          fontWeight: "600",
+        },
+      }}
+      cancelButtonProps={{
+        style: {
+          backgroundColor: "#2B1B3D",
+          borderColor: "#2B1B3D",
+          color: "#fff",
+          fontWeight: "600",
+        },
+      }}
+    >
+      <p
+        style={{
+          paddingTop: "12px",
+          fontSize: "18px",
+          fontWeight: "600",
+          color: "#2B1B3D",
+        }}
       >
-        <p className="pt-3 fs-18">
-          Are you sure you want to delete this movie?
-        </p>
-        <p className="pb-3 fs-18">
-          This action can't be undone and you'll lose this movie data.
-        </p>
-      </Modal>
-    </>
+        Are you sure you want to delete this movie?
+      </p>
+      <p
+        style={{
+          paddingBottom: "12px",
+          fontSize: "18px",
+          fontWeight: "600",
+          color: "#666877",
+        }}
+      >
+        This action can't be undone and you'll lose this movie data.
+      </p>
+    </Modal>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
 import TheatreFormModal from "./theatreForm";
 import DeleteTheatreModal from "./deleteTheatreModel";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../../redux/loaderSlice";
 import { getAllTheatres } from "../../apicalls/theaters";
@@ -14,8 +14,9 @@ const TheatreList = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTheatre, setSelectedTheatre] = useState(null);
   const [formType, setFormType] = useState("add");
-  const [theatres, setTheatres] = useState(null);
+  const [theatres, setTheatres] = useState([]);
   const [isShowModalOpen, setIsShowModalOpen] = useState(false);
+
   const dispatch = useDispatch();
 
   const getData = async () => {
@@ -24,11 +25,8 @@ const TheatreList = () => {
       const response = await getAllTheatres({ owner: user._id });
       if (response.success) {
         const allTheatres = response.data;
-        // console.log(allTheatres);
         setTheatres(
-          allTheatres.map(function (item) {
-            return { ...item, key: `theatre${item._id}` };
-          })
+          allTheatres.map((item) => ({ ...item, key: `theatre${item._id}` }))
         );
       } else {
         message.error(response.message);
@@ -44,70 +42,82 @@ const TheatreList = () => {
     {
       title: "Name",
       dataIndex: "name",
-      key: "name",
     },
     {
       title: "Address",
       dataIndex: "address",
-      key: "address",
     },
     {
       title: "Phone Number",
       dataIndex: "phone",
-      key: "phone",
     },
     {
       title: "Email",
       dataIndex: "email",
-      key: "email",
     },
     {
       title: "Status",
       dataIndex: "status",
-      render: (status, data) => {
-        if (data.isActive) {
-          return `Approved`;
-        } else {
-          return `Pending/ Blocked`;
-        }
-      },
+      render: (status, data) =>
+        data.isActive ? (
+          <span style={{ color: "#2B1B3D", fontWeight: "600" }}>Approved</span>
+        ) : (
+          <span style={{ color: "#666877", fontStyle: "italic" }}>
+            Pending / Blocked
+          </span>
+        ),
     },
     {
       title: "Action",
       dataIndex: "action",
-      render: (text, data) => {
-        return (
-          <div className="flex items-center gap-2.5">
+      render: (text, data) => (
+        <div className="flex items-center gap-2">
+          <Button
+            style={{
+              backgroundColor: "#2B1B3D",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={() => {
+              setIsModalOpen(true);
+              setFormType("edit");
+              setSelectedTheatre(data);
+            }}
+          >
+            <EditOutlined />
+          </Button>
+
+          <Button
+            style={{
+              backgroundColor: "#D62828",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setSelectedTheatre(data);
+            }}
+          >
+            <DeleteOutlined />
+          </Button>
+
+          {data.isActive && (
             <Button
+              style={{
+                backgroundColor: "#2B1B3D",
+                color: "#fff",
+                border: "none",
+              }}
               onClick={() => {
-                setIsModalOpen(true);
-                setFormType("edit");
+                setIsShowModalOpen(true);
                 setSelectedTheatre(data);
               }}
             >
-              <EditOutlined />
+              <PlusOutlined /> Shows
             </Button>
-            <Button
-              onClick={() => {
-                setIsDeleteModalOpen(true);
-                setSelectedTheatre(data);
-              }}
-            >
-              <DeleteOutlined />
-            </Button>
-            {data.isActive && (
-              <Button
-                onClick={() => {
-                  setIsShowModalOpen(true);
-                  setSelectedTheatre(data);
-                }}
-              >
-                + Shows
-              </Button>
-            )}
-          </div>
-        );
-      },
+          )}
+        </div>
+      ),
     },
   ];
 
@@ -116,19 +126,33 @@ const TheatreList = () => {
   }, []);
 
   return (
-    <>
-      <div className="d-flex justify-content-end">
+    <div
+      className="p-6 rounded-lg"
+      style={{ backgroundColor: "#F5F5F5", borderRadius: "10px" }}
+    >
+      <div className="flex justify-end mb-4">
         <Button
-          type="primary"
+          style={{
+            backgroundColor: "#D62828",
+            color: "#fff",
+            border: "none",
+          }}
           onClick={() => {
             setIsModalOpen(true);
             setFormType("add");
           }}
         >
-          Add Theatre
+          + Add Theatre
         </Button>
       </div>
-      <Table dataSource={theatres} columns={columns} />
+
+      <Table
+        dataSource={theatres}
+        columns={columns}
+        pagination={{ pageSize: 6 }}
+        bordered
+      />
+
       {isModalOpen && (
         <TheatreFormModal
           isModalOpen={isModalOpen}
@@ -139,6 +163,7 @@ const TheatreList = () => {
           getData={getData}
         />
       )}
+
       {isDeleteModalOpen && (
         <DeleteTheatreModal
           isDeleteModalOpen={isDeleteModalOpen}
@@ -156,7 +181,7 @@ const TheatreList = () => {
           selectedTheatre={selectedTheatre}
         />
       )}
-    </>
+    </div>
   );
 };
 

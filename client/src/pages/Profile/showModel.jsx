@@ -11,14 +11,12 @@ import {
 } from "antd";
 
 import { useDispatch } from "react-redux";
-// import { addTheatre, updateTheatre } from '../../apicalls/theatres';
 import {
   ArrowLeftOutlined,
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-// import { useSelector } from 'react-redux';
 import { getAllMovies } from "../../apicalls/movies";
 import {
   addShow,
@@ -41,6 +39,7 @@ const ShowModal = ({
   const [selectedShow, setSelectedShow] = useState(null);
   const dispatch = useDispatch();
 
+  // FUNCTION TO FETCH DATA
   const getData = async () => {
     try {
       dispatch(showLoading());
@@ -67,6 +66,7 @@ const ShowModal = ({
     }
   };
 
+  // FORM SUBMIT FUNCTION
   const onFinish = async (values) => {
     try {
       dispatch(showLoading());
@@ -74,7 +74,6 @@ const ShowModal = ({
       if (view === "form") {
         response = await addShow({ ...values, theatre: selectedTheatre._id });
       } else {
-        // console.log(view, selectedTheatre, selectedTheatre._id);
         response = await updateShow({
           ...values,
           showId: selectedShow._id,
@@ -115,6 +114,7 @@ const ShowModal = ({
       dispatch(hideLoading());
     }
   };
+
   const columns = [
     {
       title: "Show Name",
@@ -124,23 +124,17 @@ const ShowModal = ({
     {
       title: "Show Date",
       dataIndex: "date",
-      render: (text, data) => {
-        return moment(text).format("MMM Do YYYY");
-      },
+      render: (text) => moment(text).format("MMM Do YYYY"),
     },
     {
       title: "Show Time",
       dataIndex: "time",
-      render: (text, data) => {
-        return moment(text, "HH:mm").format("hh:mm A");
-      },
+      render: (text) => moment(text, "HH:mm").format("hh:mm A"),
     },
     {
       title: "Movie",
       dataIndex: "movie",
-      render: (text, data) => {
-        return data.movie.title;
-      },
+      render: (text, data) => data.movie.title,
     },
     {
       title: "Ticket Price",
@@ -155,16 +149,14 @@ const ShowModal = ({
     {
       title: "Available Seats",
       dataIndex: "seats",
-      render: (text, data) => {
-        return data.totalSeats - data.bookedSeats.length;
-      },
+      render: (text, data) => data.totalSeats - data.bookedSeats.length,
     },
     {
       title: "Action",
       dataIndex: "action",
       render: (text, data) => {
         return (
-          <div className="d-flex align-items-center gap-10">
+          <div className="flex items-center gap-3">
             <Button
               onClick={() => {
                 setView("edit");
@@ -180,15 +172,6 @@ const ShowModal = ({
             <Button onClick={() => handleDelete(data._id)}>
               <DeleteOutlined />
             </Button>
-            {data.isActive && (
-              <Button
-                onClick={() => {
-                  setIsShowModalOpen(true);
-                }}
-              >
-                + Shows
-              </Button>
-            )}
           </div>
         );
       },
@@ -208,8 +191,8 @@ const ShowModal = ({
       width={1200}
       footer={null}
     >
-      <div className="d-flex justify-content-between">
-        <h3>
+      <div className="flex justify-between mb-4">
+        <h3 className="font-semibold text-lg">
           {view === "table"
             ? "List of Shows"
             : view === "form"
@@ -222,174 +205,101 @@ const ShowModal = ({
           </Button>
         )}
       </div>
+
       {view === "table" && <Table dataSource={shows} columns={columns} />}
 
       {(view === "form" || view === "edit") && (
         <Form
-          className=""
           layout="vertical"
-          style={{ width: "100%" }}
           initialValues={view === "edit" ? selectedShow : null}
           onFinish={onFinish}
         >
-          <Row
-            gutter={{
-              xs: 6,
-              sm: 10,
-              md: 12,
-              lg: 16,
-            }}
-          >
-            <Col span={24}>
-              <Row
-                gutter={{
-                  xs: 6,
-                  sm: 10,
-                  md: 12,
-                  lg: 16,
-                }}
+          <Row gutter={[16, 16]}>
+            <Col span={8}>
+              <Form.Item
+                label="Show Name"
+                name="name"
+                rules={[{ required: true, message: "Show name is required" }]}
               >
-                <Col span={8}>
-                  <Form.Item
-                    label="Show Name"
-                    htmlFor="name"
-                    name="name"
-                    className="d-block"
-                    rules={[
-                      { required: true, message: "Show name is required!" },
-                    ]}
-                  >
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter the show name"
-                    ></Input>
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item
-                    label="Show Date"
-                    htmlFor="date"
-                    name="date"
-                    className="d-block"
-                    rules={[
-                      { required: true, message: "Show date is required!" },
-                    ]}
-                  >
-                    <Input
-                      id="date"
-                      type="date"
-                      placeholder="Enter the show date"
-                    ></Input>
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item
-                    label="Show Timing"
-                    htmlFor="time"
-                    name="time"
-                    className="d-block"
-                    rules={[
-                      { required: true, message: "Show time is required!" },
-                    ]}
-                  >
-                    <Input
-                      id="time"
-                      type="time"
-                      placeholder="Enter the show date"
-                    ></Input>
-                  </Form.Item>
-                </Col>
-              </Row>
+                <Input placeholder="Enter the show name" />
+              </Form.Item>
             </Col>
-            <Col span={24}>
-              <Row
-                gutter={{
-                  xs: 6,
-                  sm: 10,
-                  md: 12,
-                  lg: 16,
-                }}
+            <Col span={8}>
+              <Form.Item
+                label="Show Date"
+                name="date"
+                rules={[{ required: true, message: "Date is required" }]}
               >
-                <Col span={8}>
-                  <Form.Item
-                    label="Select the Movie"
-                    htmlFor="movie"
-                    name="movie"
-                    className="d-block"
-                    rules={[{ required: true, message: "Movie  is required!" }]}
-                  >
-                    <Select
-                      id="movie"
-                      placeholder="Select Movie"
-                      defaultValue={selectedMovie && selectedMovie.title}
-                      style={{ width: "100%", height: "45px" }}
-                      options={
-                        movies &&
-                        movies.map((movie) => ({
-                          key: movie._id,
-                          value: movie._id,
-                          label: movie.title,
-                        }))
-                      }
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item
-                    label="Ticket Price"
-                    htmlFor="ticketPrice"
-                    name="ticketPrice"
-                    className="d-block"
-                    rules={[
-                      { required: true, message: "Ticket price is required!" },
-                    ]}
-                  >
-                    <Input
-                      id="ticketPrice"
-                      type="number"
-                      placeholder="Enter the ticket price"
-                    ></Input>
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item
-                    label="Total Seats"
-                    htmlFor="totalSeats"
-                    name="totalSeats"
-                    className="d-block"
-                    rules={[
-                      { required: true, message: "Total seats are required!" },
-                    ]}
-                  >
-                    <Input
-                      id="totalSeats"
-                      type="number"
-                      placeholder="Enter the number of total seats"
-                    ></Input>
-                  </Form.Item>
-                </Col>
-              </Row>
+                <Input type="date" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Show Time"
+                name="time"
+                rules={[{ required: true, message: "Time is required" }]}
+              >
+                <Input type="time" />
+              </Form.Item>
+            </Col>
+
+            <Col span={8}>
+              <Form.Item
+                label="Movie"
+                name="movie"
+                rules={[{ required: true, message: "Movie is required" }]}
+              >
+                <Select
+                  placeholder="Select Movie"
+                  value={selectedMovie && selectedMovie.title}
+                  options={
+                    movies &&
+                    movies.map((movie) => ({
+                      label: movie.title,
+                      value: movie._id,
+                    }))
+                  }
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Ticket Price"
+                name="ticketPrice"
+                rules={[
+                  { required: true, message: "Ticket price is required" },
+                ]}
+              >
+                <Input type="number" placeholder="Enter ticket price" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Total Seats"
+                name="totalSeats"
+                rules={[
+                  { required: true, message: "Total seats are required" },
+                ]}
+              >
+                <Input type="number" placeholder="Enter total seats" />
+              </Form.Item>
             </Col>
           </Row>
-          <div className="d-flex gap-10">
+
+          <div className="flex gap-4 mt-4">
             <Button
-              className=""
-              block
-              onClick={() => {
-                setView("table");
-              }}
+              onClick={() => setView("table")}
               htmlType="button"
+              icon={<ArrowLeftOutlined />}
             >
-              <ArrowLeftOutlined /> Go Back
+              Go Back
             </Button>
             <Button
-              block
               type="primary"
               htmlType="submit"
-              style={{ fontSize: "1rem", fontWeight: "600" }}
+              className="bg-orange-500 hover:bg-orange-600 border-none"
             >
-              {view === "form" ? "Add the Show" : "Edit the Show"}
+              {view === "form" ? "Add Show" : "Update Show"}
             </Button>
           </div>
         </Form>
@@ -397,4 +307,5 @@ const ShowModal = ({
     </Modal>
   );
 };
+
 export default ShowModal;

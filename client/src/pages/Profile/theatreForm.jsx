@@ -1,9 +1,8 @@
 import { Col, Modal, Row, Form, Input, Button, message } from "antd";
 import { showLoading, hideLoading } from "../../redux/loaderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTheatre, updateTheatre } from "../../apicalls/theaters";
 import TextArea from "antd/es/input/TextArea";
-import { useSelector } from "react-redux";
 
 const TheatreFormModal = ({
   isModalOpen,
@@ -15,10 +14,6 @@ const TheatreFormModal = ({
 }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-
-  // const handleChange = (value) => {
-  //   console.log(`selected ${value}`);
-  // }
 
   const onFinish = async (values) => {
     try {
@@ -65,98 +60,80 @@ const TheatreFormModal = ({
         initialValues={selectedTheatre}
         onFinish={onFinish}
       >
-        <Row
-          gutter={{
-            xs: 6,
-            sm: 10,
-            md: 12,
-            lg: 16,
-          }}
-        >
+        <Row gutter={16}>
           <Col span={24}>
             <Form.Item
               label="Theatre Name"
-              htmlFor="name"
               name="name"
-              className="d-block"
-              rules={[{ required: true, message: "Theatre name is required!" }]}
+              rules={[{ required: true, message: "Theatre name is required" }]}
             >
-              <Input
-                id="name"
-                type="text"
-                placeholder="Enter the theatre name"
-              ></Input>
+              <Input placeholder="Enter theatre name" />
             </Form.Item>
           </Col>
+
           <Col span={24}>
             <Form.Item
               label="Theatre Address"
-              htmlFor="address"
               name="address"
-              className="d-block"
-              rules={[{ required: true, message: "Theatre name is required!" }]}
+              rules={[{ required: true, message: "Address is required" }]}
             >
-              <TextArea
-                id="address"
-                rows="3"
-                placeholder="Enter the theatre name"
-              ></TextArea>
+              <TextArea rows={3} placeholder="Enter theatre address" />
             </Form.Item>
           </Col>
+
           <Col span={24}>
-            <Row
-              gutter={{
-                xs: 6,
-                sm: 10,
-                md: 12,
-                lg: 16,
-              }}
-            >
+            <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
                   label="Email"
-                  htmlFor="email"
                   name="email"
-                  className="d-block"
-                  rules={[{ required: true, message: "Email  is required!" }]}
+                  rules={[{ required: true, message: "Email is required" }]}
                 >
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter the email"
-                  ></Input>
+                  <Input type="email" placeholder="Enter email" />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   label="Phone Number"
-                  htmlFor="phone"
                   name="phone"
-                  className="d-block"
                   rules={[
-                    { required: true, message: "Phone number is required!" },
+                    { required: true, message: "Phone number is required" },
                   ]}
                 >
-                  <Input
-                    id="phone"
-                    type="number"
-                    placeholder="Enter the phone number"
-                  ></Input>
+                  <Input type="number" placeholder="Enter phone number" />
                 </Form.Item>
               </Col>
             </Row>
           </Col>
         </Row>
+
         <Form.Item>
           <Button
             block
-            type="primary"
             htmlType="submit"
-            style={{ fontSize: "1rem", fontWeight: "600" }}
+            style={{
+              backgroundColor: "#D62828",
+              color: "#fff",
+              border: "none",
+              fontSize: "1rem",
+              fontWeight: "600",
+            }}
           >
-            Submit the Data
+            {formType === "add" ? "Add Theatre" : "Update Theatre"}
           </Button>
-          <Button className="mt-3" block onClick={handleCancel}>
+
+          <Button
+            className="mt-3"
+            block
+            onClick={handleCancel}
+            style={{
+              backgroundColor: "#2B1B3D",
+              color: "white",
+              border: "none",
+              marginTop: "10px",
+              fontWeight: "500",
+            }}
+          >
             Cancel
           </Button>
         </Form.Item>
@@ -164,4 +141,5 @@ const TheatreFormModal = ({
     </Modal>
   );
 };
+
 export default TheatreFormModal;

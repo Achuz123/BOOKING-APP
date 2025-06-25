@@ -63,7 +63,7 @@ const CheckoutForm = ({ amount, onSuccess }) => {
       <button
         type="submit"
         disabled={!stripe}
-        className="bg-blue-600 text-white px-6 py-2 rounded w-full"
+        className="bg-[#2B1B3D] text-white px-6 py-2 rounded w-full"
       >
         Pay Now
       </button>
@@ -103,7 +103,7 @@ const BookShow = () => {
     return (
       <div className="flex flex-col items-center">
         <div className="w-full max-w-[600px] mx-auto mb-[25px]">
-          <p className="text-center mb-[10px]">
+          <p className="text-center mb-[10px] font-semibold">
             Screen this side, you will be watching in this direction
           </p>
           <div className="max-w-[75%] mx-auto h-[10px] bg-[#eee]"></div>
@@ -113,20 +113,26 @@ const BookShow = () => {
             return Array.from(Array(columns).keys()).map((column) => {
               let seatNumber = seat * columns + column + 1;
               let seatClass =
-                "bg-[#f6f6f6] border border-[#a0a0a0] w-[40px] h-[35px] text-center text-[13px] cursor-pointer";
+                "bg-[#f6f6f6] border border-[#a0a0a0] w-[40px] h-[35px] text-center text-[13px] cursor-pointer rounded";
+
               if (selectedSeats.includes(seatNumber)) {
-                seatClass += " bg-green-600 border-green-600 text-white";
+                seatClass =
+                  "bg-[#198754] border-[#198754] text-white w-[40px] h-[35px] text-center text-[13px] cursor-pointer rounded";
               }
+
               if (show.bookedSeats.includes(seatNumber)) {
-                seatClass +=
-                  " bg-[#ddd] text-[#999] border-[#ddd] cursor-not-allowed";
+                seatClass =
+                  "bg-[#ddd] text-[#999] border-[#ddd] w-[40px] h-[35px] text-center text-[13px] cursor-not-allowed rounded";
               }
+
               if (seatNumber <= totalSeats)
                 return (
                   <li key={`seats${seatNumber}`}>
                     <button
                       className={seatClass}
                       onClick={() => {
+                        if (show.bookedSeats.includes(seatNumber)) return;
+
                         if (selectedSeats.includes(seatNumber)) {
                           setSelectedSeats(
                             selectedSeats.filter(
@@ -148,11 +154,14 @@ const BookShow = () => {
 
         <div className="flex justify-between w-full max-w-[600px] mx-auto mb-[25px] mt-3">
           <div className="flex-1 font-bold">
-            Selected Seats: <span>{selectedSeats.join(", ")}</span>
+            Selected Seats:{" "}
+            <span className="text-[#2B1B3D]">{selectedSeats.join(", ")}</span>
           </div>
           <div className="shrink-0 ms-3 font-bold">
             Total Price:{" "}
-            <span>Rs. {selectedSeats.length * show.ticketPrice}</span>
+            <span className="text-[#D62828]">
+              Rs. {selectedSeats.length * show.ticketPrice}
+            </span>
           </div>
         </div>
       </div>
@@ -193,7 +202,7 @@ const BookShow = () => {
             <Card
               title={
                 <div className="space-y-[6px] [&>*]:mt-0">
-                  <h1>{show.movie.title}</h1>
+                  <h1 className="font-bold text-xl">{show.movie.title}</h1>
                   <p>
                     Theatre: {show.theatre.name}, {show.theatre.address}
                   </p>

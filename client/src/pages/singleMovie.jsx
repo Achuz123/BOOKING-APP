@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getMovieById } from "../apicalls/movies";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../redux/loaderSlice";
-import { message, Input, Divider, Row, Col } from "antd";
+import { message, Input, Row, Col } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { getAllTheatresByMovie } from "../apicalls/shows";
@@ -15,6 +15,7 @@ const SingleMovie = () => {
   const [theatres, setTheatres] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleDate = (e) => {
     setDate(moment(e.target.value).format("YYYY-MM-DD"));
     navigate(`/movie/${params.id}?date=${e.target.value}`);
@@ -42,14 +43,13 @@ const SingleMovie = () => {
       const response = await getAllTheatresByMovie({ movie: params.id, date });
       if (response.success) {
         setTheatres(response.data);
-        console.log(theatres);
       } else {
         message.error(response.message);
       }
       dispatch(hideLoading());
     } catch (err) {
       dispatch(hideLoading());
-      message.err(err.message);
+      message.error(err.message);
     }
   };
 
@@ -66,69 +66,82 @@ const SingleMovie = () => {
       <div className="max-w-[1000px] mx-auto">
         {movie && (
           <div className="flex flex-col md:flex-row">
-            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-              <img src={movie.poster} width={150} alt="Movie Poster" />
+            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+              <img
+                src={movie.poster}
+                width={180}
+                className="rounded shadow"
+                alt="Movie Poster"
+              />
             </div>
             <div className="w-full">
-              <h1 className="mt-0 text-2xl font-semibold">{movie.title}</h1>
-              <p className="text-gray-500 text-sm mt-1 mb-2">
+              <h1 className="mt-0 text-3xl font-bold text-[#2B1B3D]">
+                {movie.title}
+              </h1>
+              <p className="text-gray-500 text-[15px] mt-1">
                 Language:{" "}
-                <span className="text-gray-900 font-semibold">
+                <span className="text-black font-semibold">
                   {movie.language}
                 </span>
               </p>
-              <p className="text-gray-500 text-sm mt-1 mb-2">
+              <p className="text-gray-500 text-[15px]">
                 Genre:{" "}
-                <span className="text-gray-900 font-semibold">
-                  {movie.genre}
-                </span>
+                <span className="text-black font-semibold">{movie.genre}</span>
               </p>
-              <p className="text-gray-500 text-sm mt-1 mb-2">
+              <p className="text-gray-500 text-[15px]">
                 Release Date:{" "}
-                <span className="text-gray-900 font-semibold">
+                <span className="text-black font-semibold">
                   {moment(movie.date).format("MMM Do YYYY")}
                 </span>
               </p>
-              <p className="text-gray-500 text-sm mt-1 mb-2">
+              <p className="text-gray-500 text-[15px]">
                 Duration:{" "}
-                <span className="text-gray-900 font-semibold">
+                <span className="text-black font-semibold">
                   {movie.duration} Minutes
                 </span>
               </p>
+
               <hr className="border border-gray-200 my-4" />
-              <div className="flex flex-col md:flex-row items-center mt-4">
-                <label className="md:mr-4 flex-shrink-0 mb-2 md:mb-0">
+
+              <div className="flex flex-col md:flex-row items-center gap-3">
+                <label className="flex-shrink-0 text-[15px]">
                   Choose the date:
                 </label>
                 <Input
                   onChange={handleDate}
                   type="date"
                   min={moment().format("YYYY-MM-DD")}
-                  className="max-w-[300px] mt-2 md:mt-0"
                   value={date}
-                  placeholder="default size"
+                  className="max-w-[250px]"
                   prefix={<CalendarOutlined />}
                 />
               </div>
             </div>
           </div>
         )}
+
         {theatres.length === 0 && (
-          <div className="pt-4">
-            <h2 className="text-[#1890ff] text-lg font-semibold">
-              Currently, no theatres available for this movie!
+          <div className="pt-6">
+            <h2 className="text-[#D62828] text-lg font-semibold">
+              No theatres available for this movie on this date.
             </h2>
           </div>
         )}
+
         {theatres.length > 0 && (
-          <div className="mt-4 pt-4">
-            <h2 className="text-xl font-semibold mb-4">Theatres</h2>
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold text-[#2B1B3D] mb-5">
+              Available Theatres
+            </h2>
+
             {theatres.map((theatre) => {
               return (
                 <div key={theatre._id}>
-                  <Row gutter={24} key={theatre._id}>
+                  <Row gutter={24}>
                     <Col xs={{ span: 24 }} lg={{ span: 8 }}>
-                      <h3 className="text-lg font-semibold">{theatre.name}</h3>
+                      <h3 className="text-xl font-semibold text-[#2B1B3D]">
+                        {theatre.name}
+                      </h3>
                       <p className="text-sm text-gray-600">{theatre.address}</p>
                     </Col>
                     <Col xs={{ span: 24 }} lg={{ span: 16 }}>
@@ -145,7 +158,7 @@ const SingleMovie = () => {
                                 onClick={() =>
                                   navigate(`/book-show/${singleShow._id}`)
                                 }
-                                className="px-4 py-3 border border-gray-400 rounded cursor-pointer text-orange-500 hover:text-white hover:bg-orange-500 hover:border-transparent transition-all"
+                                className="px-4 py-3 border border-[#D62828] text-[#D62828] rounded cursor-pointer hover:bg-[#D62828] hover:text-white transition-all"
                               >
                                 {moment(singleShow.time, "HH:mm").format(
                                   "hh:mm A"
@@ -156,7 +169,7 @@ const SingleMovie = () => {
                       </ul>
                     </Col>
                   </Row>
-                  <hr className="border border-gray-200 my-4" />
+                  <hr className="border border-gray-200 my-5" />
                 </div>
               );
             })}
@@ -166,4 +179,5 @@ const SingleMovie = () => {
     </>
   );
 };
+
 export default SingleMovie;

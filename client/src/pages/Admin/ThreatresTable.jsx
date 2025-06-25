@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
-
 import { hideLoading, showLoading } from "../../redux/loaderSlice";
 import { getAllTheatresAdmin, updateTheatre } from "../../apicalls/theaters";
 import { useDispatch } from "react-redux";
@@ -8,7 +7,6 @@ import { useDispatch } from "react-redux";
 function ThreatresTable() {
   const [theatres, setTheatres] = useState([]);
   const dispatch = useDispatch();
-  //to get the theatre data
 
   const getData = async () => {
     try {
@@ -29,91 +27,93 @@ function ThreatresTable() {
     }
   };
 
-  //columns for the table
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
-      title: "Owner",
-      dataIndex: "owner",
-      render: (text, data) => {
-        return data.owner && data.owner.name;
-      },
-    },
-    {
-      title: "Phone Number",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (status, data) => {
-        if (data.isActive) {
-          return "Approved";
-        } else {
-          return "Pending/ Blocked";
-        }
-      },
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: (text, data) => {
-        return (
-          <div className="d-flex align-items-center gap-10">
-            {data.isActive ? (
-              <Button onClick={() => handleStatusChange(data)}>Block</Button>
-            ) : (
-              <Button onClick={() => handleStatusChange(data)}>Approve</Button>
-            )}
-          </div>
-        );
-      },
-    },
-  ];
-
-  //to change when we press submit
   const handleStatusChange = async (theatre) => {
     try {
-      dispatch(showLoading);
-      let values = {
-        ...theatres,
+      dispatch(showLoading());
+      const values = {
         theatreId: theatre._id,
         isActive: !theatre.isActive,
       };
       const response = await updateTheatre(values);
-      console.log(response, theatre);
       if (response.success) {
         message.success(response.message);
         getData();
       }
-      dispatch(hideLoading);
+      dispatch(hideLoading());
     } catch (err) {
-      dispatch(hideLoading);
+      dispatch(hideLoading());
       message.error(err.message);
     }
   };
-  ///use effect to call it everytime the page runs
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+    },
+    {
+      title: "Owner",
+      dataIndex: "owner",
+      render: (text, data) => data.owner?.name,
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status, data) =>
+        data.isActive ? (
+          <span style={{ color: "#2B1B3D", fontWeight: "600" }}>Approved</span>
+        ) : (
+          <span style={{ color: "#666877", fontStyle: "italic" }}>
+            Pending / Blocked
+          </span>
+        ),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text, data) => (
+        <Button
+          style={{
+            backgroundColor: data.isActive ? "#D62828" : "#2B1B3D",
+            color: "#fff",
+            border: "none",
+          }}
+          onClick={() => handleStatusChange(data)}
+        >
+          {data.isActive ? "Block" : "Approve"}
+        </Button>
+      ),
+    },
+  ];
 
   useEffect(() => {
     getData();
   }, []);
 
-  return <> {<Table dataSource={theatres} columns={columns} />}</>;
+  return (
+    <Table
+      dataSource={theatres}
+      columns={columns}
+      pagination={{ pageSize: 6 }}
+      bordered
+      style={{
+        backgroundColor: "#F5F5F5",
+        borderRadius: "10px",
+      }}
+    />
+  );
 }
 
 export default ThreatresTable;

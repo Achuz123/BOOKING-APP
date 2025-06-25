@@ -1,37 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message } from "antd";
-
 import DeleteMovieModal from "./DeleteMovieModel";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../../redux/loaderSlice";
 import { getAllMovies } from "../../apicalls/movies";
 import moment from "moment";
 import MovieFormModal from "./MovieFormModel";
-// const dataSource = [
-//     {
-//       key: '1',
-//       poster: 'Image1',
-//       name: 'Mastaney',
-//       description: 'Set in 1739, Nadar Shah`s undefeated army was attacked by Sikh Rebellions. ',
-//       duration: 120,
-//       genre: "Action",
-//       language: "Hindi",
-//       releaseDate: "Oct  25, 2023",
-//     },
-//     {
-//       key: '2',
-//       poster: 'Image2',
-//       name: 'Mastaney',
-//       description: 'Set in 1739, Nadar Shah`s undefeated army was attacked by Sikh Rebellions. ',
-//       duration: 120,
-//       genre: "Action",
-//       language: "Hindi",
-//       releaseDate: "Oct  25, 2023",
-//       action: "Delete"
-//     },
 
-//   ];
 const MovieList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -48,9 +24,10 @@ const MovieList = () => {
       if (response.success) {
         const allMovies = response.data;
         setMovies(
-          allMovies.map(function (item) {
-            return { ...item, key: `movie${item._id}` };
-          })
+          allMovies.map((item) => ({
+            ...item,
+            key: `movie${item._id}`,
+          }))
         );
       } else {
         message.error(response.message);
@@ -66,78 +43,85 @@ const MovieList = () => {
     {
       title: "Poster",
       dataIndex: "poster",
-      render: (text, data) => {
-        return (
-          <img
-            src={data.poster}
-            alt="Movie Poster"
-            width="75"
-            height="115"
-            style={{ objectFit: "cover" }}
-          />
-        );
-      },
+      render: (text, data) => (
+        <img
+          src={data.poster}
+          alt="Movie Poster"
+          width="70"
+          height="100"
+          style={{
+            objectFit: "cover",
+            borderRadius: "8px",
+            border: "1px solid #ddd",
+          }}
+        />
+      ),
     },
     {
       title: "Movie Name",
       dataIndex: "title",
-      key: "title",
     },
     {
       title: "Description",
       dataIndex: "description",
-      key: "description",
+      render: (text) => (
+        <span style={{ color: "#666877" }}>
+          {text.length > 60 ? text.substring(0, 60) + "..." : text}
+        </span>
+      ),
     },
     {
       title: "Duration",
       dataIndex: "duration",
-      render: (text, data) => {
-        return `${text}m`;
-      },
+      render: (text) => `${text}m`,
     },
     {
       title: "Genre",
       dataIndex: "genre",
-      key: "genre",
     },
     {
       title: "Language",
       dataIndex: "language",
-      key: "language",
     },
     {
       title: "Release Date",
       dataIndex: "releaseDate",
-      render: (text, data) => {
-        return moment(data.releaseDate).format("MM-DD-YYYY");
-      },
+      render: (text) => moment(text).format("MM-DD-YYYY"),
     },
     {
       title: "Action",
       dataIndex: "action",
-      render: (text, data) => {
-        return (
-          <div className="d-flex align-items-center gap-10">
-            <Button
-              onClick={() => {
-                setIsModalOpen(true);
-                setFormType("edit");
-                setSelectedMovie(data);
-              }}
-            >
-              <EditOutlined />
-            </Button>
-            <Button
-              onClick={() => {
-                setIsDeleteModalOpen(true);
-                setSelectedMovie(data);
-              }}
-            >
-              <DeleteOutlined />
-            </Button>
-          </div>
-        );
-      },
+      render: (text, data) => (
+        <div className="flex gap-3">
+          <Button
+            style={{
+              backgroundColor: "#D62828",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={() => {
+              setIsModalOpen(true);
+              setFormType("edit");
+              setSelectedMovie(data);
+            }}
+          >
+            <EditOutlined />
+          </Button>
+          <Button
+            style={{
+              backgroundColor: "#2B1B3D",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={() => {
+              setIsDeleteModalOpen(true);
+              setSelectedMovie(data);
+            }}
+          >
+            <DeleteOutlined />
+          </Button>
+        </div>
+      ),
     },
   ];
 
@@ -147,9 +131,14 @@ const MovieList = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-end">
+      <div className="flex justify-end mb-4">
         <Button
-          type="primary"
+          icon={<PlusOutlined />}
+          style={{
+            backgroundColor: "#D62828",
+            color: "#fff",
+            border: "none",
+          }}
           onClick={() => {
             setIsModalOpen(true);
             setFormType("add");
@@ -158,7 +147,15 @@ const MovieList = () => {
           Add Movie
         </Button>
       </div>
-      <Table dataSource={movies} columns={columns} />
+      <Table
+        dataSource={movies}
+        columns={columns}
+        pagination={{ pageSize: 6 }}
+        bordered
+        style={{ backgroundColor: "#F5F5F5" }}
+        rowClassName={() => "hover:bg-[#F5F5F5]"}
+        scroll={{ x: true }}
+      />
       {isModalOpen && (
         <MovieFormModal
           isModalOpen={isModalOpen}

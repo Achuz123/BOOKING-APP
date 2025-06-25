@@ -4,7 +4,7 @@ import { hideLoading, showLoading } from "../redux/loaderSlice";
 import { getCurrentUser } from "../apicalls/users";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
-import { Layout, Menu, Dropdown, message } from "antd";
+import { Layout, Dropdown, message } from "antd";
 import { Header } from "antd/es/layout/layout";
 import {
   HomeOutlined,
@@ -47,10 +47,9 @@ function ProtectedRoute({ children }) {
     try {
       dispatch(showLoading());
       const response = await getCurrentUser();
-
       if (response.success) {
         dispatch(setUser(response.data));
-        if (!response.data.isAdmin && window.location.pathname == "/admin") {
+        if (!response.data.isAdmin && window.location.pathname === "/admin") {
           message.warning("You are not authorized");
           navigate("/");
         }
@@ -60,7 +59,6 @@ function ProtectedRoute({ children }) {
         localStorage.removeItem("token");
         navigate("/login");
       }
-
       dispatch(hideLoading());
     } catch (error) {
       dispatch(hideLoading());
@@ -80,33 +78,62 @@ function ProtectedRoute({ children }) {
     user && (
       <Layout>
         <Header
-          className="flex justify-between"
           style={{
             position: "sticky",
             top: 0,
-            zIndex: 1,
+            zIndex: 100,
             width: "100%",
+            backgroundColor: "#CBD4E6", // Soft Blue-Gray Navbar
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
+            padding: "0 30px",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            borderBottom: "1px solid rgba(43, 27, 61, 0.2)", // Subtle dark purple line
           }}
         >
-          <h3 className="text-white m-0">Book My Show</h3>
-
-          <div className="flex items-center gap-6">
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              items={[
-                {
-                  key: "home",
-                  icon: <HomeOutlined />,
-                  label: <span onClick={() => navigate("/")}>Home</span>,
-                },
-              ]}
+          {/* Logo and Title */}
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            <img
+              src="/favicon/orange-logo (1).png"
+              alt="Logo"
+              style={{
+                width: "65px",
+                height: "65px",
+                objectFit: "contain",
+              }}
             />
+            <h3
+              className="m-0 text-2xl font-bold"
+              style={{ color: "#2B1B3D" }} // Dark Purple text
+            >
+              SCREENLY
+            </h3>
+          </div>
 
-            <Dropdown menu={{ items: userMenu }} trigger={["click"]}>
-              <div className="text-white cursor-pointer flex items-center gap-2 ">
+          {/* Navbar Items */}
+          <div className="flex items-center gap-8">
+            <div
+              className="cursor-pointer text-lg flex items-center gap-1 hover:underline"
+              style={{ color: "#2B1B3D" }}
+              onClick={() => navigate("/")}
+            >
+              <HomeOutlined />
+              <span>Home</span>
+            </div>
+
+            <Dropdown
+              menu={{ items: userMenu }}
+              trigger={["click"]}
+              placement="bottom"
+            >
+              <div
+                className="cursor-pointer text-lg flex items-center gap-1 hover:underline"
+                style={{ color: "#2B1B3D" }}
+              >
                 <UserOutlined />
                 <span>{user.name}</span>
               </div>
@@ -114,7 +141,14 @@ function ProtectedRoute({ children }) {
           </div>
         </Header>
 
-        <div style={{ padding: 24, minHeight: 380, background: "#fff" }}>
+        {/* Background */}
+        <div
+          style={{
+            padding: 24,
+            minHeight: "calc(100vh - 64px)",
+            background: "#EAE6F7", // Light Pastel Purple for body
+          }}
+        >
           {children}
         </div>
       </Layout>

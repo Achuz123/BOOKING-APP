@@ -58,7 +58,17 @@ const MovieFormModal = ({
   return (
     <Modal
       centered
-      title={formType === "add" ? "Add Movie" : "Edit Movie"}
+      title={
+        <span
+          style={{
+            color: "#2B1B3D",
+            fontSize: "22px",
+            fontWeight: "700",
+          }}
+        >
+          {formType === "add" ? "Add Movie" : "Edit Movie"}
+        </span>
+      }
       open={isModalOpen}
       onCancel={handleCancel}
       width={800}
@@ -70,85 +80,51 @@ const MovieFormModal = ({
         initialValues={selectedMovie}
         onFinish={onFinish}
       >
-        <Row
-          gutter={{
-            xs: 6,
-            sm: 10,
-            md: 12,
-            lg: 16,
-          }}
-        >
+        <Row gutter={[16, 16]}>
           <Col span={24}>
             <Form.Item
               label="Movie Name"
-              htmlFor="title"
               name="title"
-              className="d-block"
               rules={[{ required: true, message: "Movie name is required!" }]}
             >
-              <Input
-                id="title"
-                type="text"
-                placeholder="Enter the movie name"
-              ></Input>
+              <Input placeholder="Enter the movie name" />
             </Form.Item>
           </Col>
+
           <Col span={24}>
             <Form.Item
               label="Description"
-              htmlFor="description"
               name="description"
-              className="d-block"
               rules={[{ required: true, message: "Description is required!" }]}
             >
-              <TextArea
-                id="description"
-                rows="4"
-                placeholder="Enter the  description"
-              ></TextArea>
+              <TextArea rows={4} placeholder="Enter the description" />
             </Form.Item>
           </Col>
+
           <Col span={24}>
-            <Row
-              gutter={{
-                xs: 6,
-                sm: 10,
-                md: 12,
-                lg: 16,
-              }}
-            >
+            <Row gutter={[16, 16]}>
               <Col span={8}>
                 <Form.Item
-                  label="Movie  Duration (in min)"
-                  htmlFor="duration"
+                  label="Duration (in min)"
                   name="duration"
-                  className="d-block"
                   rules={[
-                    { required: true, message: "Movie duration  is required!" },
+                    { required: true, message: "Movie duration is required!" },
                   ]}
                 >
-                  <Input
-                    id="duration"
-                    type="number"
-                    placeholder="Enter the movie duration"
-                  ></Input>
+                  <Input type="number" placeholder="Enter duration" />
                 </Form.Item>
               </Col>
+
               <Col span={8}>
                 <Form.Item
-                  label="Select Movie Lanuage"
-                  htmlFor="language"
+                  label="Language"
                   name="language"
-                  className="d-block"
                   rules={[
-                    { required: true, message: "Movie language  is required!" },
+                    { required: true, message: "Movie language is required!" },
                   ]}
                 >
                   <Select
-                    id="language"
-                    defaultValue="Select Language"
-                    style={{ width: "100%", height: "45px" }}
-                    onChange={handleChange}
+                    placeholder="Select Language"
                     options={[
                       { value: "English", label: "English" },
                       { value: "Hindi", label: "Hindi" },
@@ -160,51 +136,33 @@ const MovieFormModal = ({
                   />
                 </Form.Item>
               </Col>
+
               <Col span={8}>
                 <Form.Item
                   label="Release Date"
-                  htmlFor="releaseDate"
                   name="releaseDate"
-                  className="d-block"
                   rules={[
-                    {
-                      required: true,
-                      message: "Movie Release Date is required!",
-                    },
+                    { required: true, message: "Release date is required!" },
                   ]}
                 >
-                  <Input
-                    id="releaseDate"
-                    type="date"
-                    placeholder="Choose the release date"
-                  ></Input>
+                  <Input type="date" placeholder="Select date" />
                 </Form.Item>
               </Col>
             </Row>
           </Col>
+
           <Col span={24}>
-            <Row
-              gutter={{
-                xs: 6,
-                sm: 10,
-                md: 12,
-                lg: 16,
-              }}
-            >
+            <Row gutter={[16, 16]}>
               <Col span={8}>
                 <Form.Item
-                  label="Select Movie Genre"
-                  htmlFor="genre"
+                  label="Genre"
                   name="genre"
-                  className="d-block"
                   rules={[
-                    { required: true, message: "Movie genre  is required!" },
+                    { required: true, message: "Movie genre is required!" },
                   ]}
                 >
                   <Select
-                    defaultValue="Select Movie"
-                    style={{ width: "100%" }}
-                    onChange={handleChange}
+                    placeholder="Select Genre"
                     options={[
                       { value: "Action", label: "Action" },
                       { value: "Comedy", label: "Comedy" },
@@ -218,36 +176,48 @@ const MovieFormModal = ({
                   />
                 </Form.Item>
               </Col>
+
               <Col span={16}>
                 <Form.Item
-                  label="Poster  URL"
-                  htmlFor="poster"
+                  label="Poster URL"
                   name="poster"
-                  className="d-block"
                   rules={[
-                    { required: true, message: "Movie Poster  is required!" },
+                    { required: true, message: "Poster URL is required!" },
                   ]}
                 >
-                  <Input
-                    id="poster"
-                    type="text"
-                    placeholder="Enter the poster URL"
-                  ></Input>
+                  <Input placeholder="Enter poster URL" />
                 </Form.Item>
               </Col>
             </Row>
           </Col>
         </Row>
+
         <Form.Item>
           <Button
             block
-            type="primary"
             htmlType="submit"
-            style={{ fontSize: "1rem", fontWeight: "600" }}
+            style={{
+              backgroundColor: "#2B1B3D",
+              color: "#fff",
+              border: "none",
+              fontSize: "1rem",
+              fontWeight: "600",
+            }}
           >
-            Submit the Data
+            Submit
           </Button>
-          <Button className="mt-3" block onClick={handleCancel}>
+          <Button
+            block
+            onClick={handleCancel}
+            style={{
+              backgroundColor: "#D62828",
+              color: "#fff",
+              border: "none",
+              marginTop: "10px",
+              fontSize: "1rem",
+              fontWeight: "600",
+            }}
+          >
             Cancel
           </Button>
         </Form.Item>

@@ -12,7 +12,9 @@ function Profile() {
   ];
   return (
     <div>
-      <h1>Welcome {user.name} To Your Profile</h1>
+      <h1 className="text-3xl font-bold text-[#2B1B3D]">
+        Welcome {user.name} To Your Profile
+      </h1>
       <Tabs defaultActiveKey="2" items={items} />
     </div>
   );
