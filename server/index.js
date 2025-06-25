@@ -5,12 +5,17 @@ const userRoute = require("./routes/userRoute.js");
 const theatreRoute = require("./routes/theatreRoute.js");
 const movieRoutes = require("./routes/movieRoutes.js");
 const showRoutes = require("./routes/showRoutes.js");
-
 const bookingRoute = require("./routes/bookingRoute.js");
 const app = express();
+const cors = require("cors");
 
 //DB CONNECTION CODE
-
+app.use(
+  cors({
+    origin: "https://screeenly.netlify.app",
+    credentials: true,
+  })
+);
 mongoose
   .connect(
     "mongodb+srv://achuthampi19:r1BueIze5bNjW60m@agri.6k18y.mongodb.net/?retryWrites=true&w=majority&appName=agri"
