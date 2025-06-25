@@ -20,7 +20,7 @@ export const bookShow = async (payload) => {
       "/api/bookings/book-show",
       payload
     );
-    console.log(response.data);
+
     return response.data;
   } catch (err) {
     return err.response;

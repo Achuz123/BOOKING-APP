@@ -90,9 +90,7 @@ router.post("/login", async (req, res) => {
 //middleware
 
 router.get("/get-current-user", authMiddleware, async (req, res) => {
-  console.log(req);
   const user = await User.findById(req.userId).select("-password"); //seclect is used to sslect only the necessary -means evrything except that
-  console.log(user);
 
   res.send({
     success: true,

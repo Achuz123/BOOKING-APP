@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 module.exports = function (req, res, next) {
   try {
-    console.log(req);
     // before split Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.wZjYyNDQ0ZmE4OSIsImlhdCI6MTc1MDM0MTY3NSwiZXhwIjoxNzUwNDI4MDc1fQ"
     let token = req.headers.authorization.split(" ")[1]; // you split to remove the bearer token.Bearer token is basicaly the JWT token
     let verifiedToken = jwt.verify(token, `${process.env.SECRET_KEY}`);

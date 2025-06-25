@@ -173,7 +173,6 @@ const ShowModal = ({
                   ...data,
                   date: moment(data.date).format("YYYY-MM-DD"),
                 });
-                console.log(selectedMovie && selectedMovie.title);
               }}
             >
               <EditOutlined />

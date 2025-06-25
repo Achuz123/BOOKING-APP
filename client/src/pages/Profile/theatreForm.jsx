@@ -30,7 +30,7 @@ const TheatreFormModal = ({
         values.theatreId = selectedTheatre._id;
         response = await updateTheatre(values);
       }
-      console.log(response);
+
       if (response.success) {
         getData();
         message.success(response.message);

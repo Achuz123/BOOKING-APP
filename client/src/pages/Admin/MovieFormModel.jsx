@@ -15,9 +15,7 @@ const MovieFormModal = ({
 }) => {
   const dispatch = useDispatch();
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const handleChange = (value) => {};
 
   if (selectedMovie) {
     selectedMovie.releaseDate = moment(selectedMovie.releaseDate).format(
@@ -26,7 +24,6 @@ const MovieFormModal = ({
   }
 
   const onFinish = async (values) => {
-    console.log(values);
     try {
       dispatch(showLoading());
       let response = null;
@@ -35,7 +32,7 @@ const MovieFormModal = ({
       } else {
         response = await updateMovie({ ...values, movieId: selectedMovie._id });
       }
-      console.log(response);
+
       if (response.success) {
         getData();
         message.success(response.message);
@@ -57,8 +54,6 @@ const MovieFormModal = ({
     setIsModalOpen(false);
     setSelectedMovie(null);
   };
-
-  console.log(selectedMovie);
 
   return (
     <Modal
