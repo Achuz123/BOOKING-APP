@@ -5,6 +5,7 @@ const userRoute = require("./routes/userRoute.js");
 const theatreRoute = require("./routes/theatreRoute.js");
 const movieRoutes = require("./routes/movieRoutes.js");
 const showRoutes = require("./routes/showRoutes.js");
+
 const bookingRoute = require("./routes/bookingRoute.js");
 const app = express();
 
