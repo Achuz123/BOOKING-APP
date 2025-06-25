@@ -13,6 +13,8 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 
+import logo from "../assets/logo.png";
+
 function ProtectedRoute({ children }) {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -98,7 +100,7 @@ function ProtectedRoute({ children }) {
             onClick={() => navigate("/")}
           >
             <img
-              src="/favicon/orange-logo (1).png"
+              src={logo}
               alt="Logo"
               style={{
                 width: "65px",
