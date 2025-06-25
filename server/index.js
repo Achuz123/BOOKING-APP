@@ -1,11 +1,11 @@
 const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const userRoute = require("./Routes/userRoute.js");
-const theatreRoute = require("./Routes/theatreRoute.js");
-const movieRoutes = require("./Routes/movieRoutes.js");
-const showRoutes = require("./Routes/showRoutes.js");
-const bookingRoute = require("./Routes/bookingRoute.js");
+const userRoute = require("./routes/userRoute.js");
+const theatreRoute = require("./routes/theatreRoute.js");
+const movieRoutes = require("./routes/movieRoutes.js");
+const showRoutes = require("./routes/showRoutes.js");
+const bookingRoute = require("./routes/bookingRoute.js");
 const app = express();
 
 //DB CONNECTION CODE
