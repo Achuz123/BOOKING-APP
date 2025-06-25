@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const stripe = require("stripe")(process.env.stripe_key);
 const authMiddleware = require("../middleware/authMiddleware");
-const Booking = require("../Models/BookingModel");
+const Booking = require("../models/bookingModel");
 const Show = require("../models/showModel");
 
 // Create Payment Intent

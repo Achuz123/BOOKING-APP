@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Show = require("../Models/showModel");
+const Show = require("../models/showModel");
 const Theatre = require("../models/theatreModel");
 
 //add a show

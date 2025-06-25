@@ -1,4 +1,4 @@
-const Movie = require("./../Models/movieModel");
+const Movie = require("../models/movieModel");
 const router = require("express").Router();
 
 // Add , Update , Delete and Get Movies
