@@ -97,7 +97,7 @@ const BookShow = () => {
 
   const getSeats = () => {
     let columns = 12;
-    let totalSeats = 200;
+    let totalSeats = show.totalSeats;
     let rows = Math.ceil(totalSeats / columns);
 
     return (
