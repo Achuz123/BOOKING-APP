@@ -40,7 +40,7 @@ function Register() {
         </div>
 
         <h2 className="font-bold text-2xl mb-6 text-center text-orange-600">
-          Register To BOOKMYSHOW
+          Register To SCREENLY
         </h2>
 
         <Form

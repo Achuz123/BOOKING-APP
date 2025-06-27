@@ -49,7 +49,7 @@ function login() {
         </div>
 
         <h2 className="font-bold text-2xl mb-6 text-center text-orange-600">
-          Login To BOOKMYSHOW
+          Login To SCREENLY
         </h2>
 
         <Form
